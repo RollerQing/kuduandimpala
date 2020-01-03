@@ -1,0 +1,79 @@
+Kudu基本概念：
+在频繁更新的数据之上快速的数据分析；可以提供低延迟的随机读写能力，高效的数据分析能力（吞吐量大）；
+1、Cloudera 开发（C++）；数据存储引擎
+2、设计中借鉴了parquet、HBase的实现
+3、数据模型类似于关系型数据库中的表；数据内部为列式存储
+4、支持水平扩展，与impala、spark紧密结合
+
+体系架构：
+Master：集群中boss，管理集群及集群中的元数据
+Tablet Server：集群中的工作节点，负责数据的存储，提供数据读写的服务
+
+Table：用于保存数据；具有 Schema 及全局有序的主键(primary key，可以是多个列)；不支持二级索引；
+Table在水平方向上切分成多个 Tablet，器存储在Tablet Server上；
+hash(主键)、range、 hash(主键) + range
+
+Tablet：可以有多个副本（一定是奇数），其中一个是Leader，其他的是follower；
+Leader提供：读写服务；follower只能提供读服务；客户端对leader的修改，需要同步到半数以上的follower操作才算成功；
+副本之间使用raft协议，提供高可用和一致性；
+
+安装方式：yum
+软件存放路径：/usr/lib/kudu
+配置文件路径：/etc/kudu/conf/
+缺省配置路径：/etc/default/
+系统日志存放路径：/var/log/kudu/
+数据日志与数据存放路径：自定义
+
+kudu web界面: http://node4:8051
+编程的访问端口（rpc端口）：7051
+kudu  服务的启停：
+service kudu-master start|stop|status
+service kudu-tserver start|stop|status
+
+kudu的Java API:
+1、kudu没有提供基于SQL的API，提供了NoSQL的API，操作不便
+2、适合于做细粒度的更新
+3、核心是：KuduClient
+
+Kudu 与 Spark 整合：
+1、核心: KuduContext
+2、编码简单（熟悉、语法简单）
+3、适合于做数据分析（不适合做细粒度的更新）
+4、使用SparkSession存取数据，更方便
+
+
+impala概况：
+impala高效的SQL查询工具；Cloudera(C++)
+impala基于hive的元数据管理功能，兼顾数据仓库，具有高效、批处理、多并发、交互式查询；
+impala 与 Kudu 结合紧密，允许使用sql对kudu进行增删改查；
+
+安装impala，必须安装hive，启动metastore功能；
+impala 对内存要求高，没有hive稳定（大数据量情况下）；
+
+impala的体系架构：
+catalogd：类似于主节点，提供连接元素库，并负责元数据的更新操作；
+statestored：检查集群中impalad的监控状况；元数据的信息同步
+impalad：从节点。有两种角色：Coordinator、Executor
+Coordinator角色的作用：
+1、接收客户端发送的DML语句，并负责解析、生成对应的执行计划；将执行计划发送到Executor；
+2、从Executor接收执行结果，并转发客户端
+3、对于DDL语句，转发Catalogd
+Executor角色的作用：接收子执行计划，执行任务，返回结果
+
+启动的服务：
+service impala-state-store start
+service impala-catalog start
+service impala-server start
+
+impala常用端口号：
+25000       web服务
+21050       jdbc服务
+21000       rpc端口号
+
+impala-shell 命令行工具
+
+impala web界面: htpp://node4:25000
+impala服务的启停：
+service impala-state-store start
+service impala-catalog start
+service impala-server start
