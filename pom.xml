@@ -7,34 +7,30 @@
     <groupId>cn.bigdata.kuduandimpala</groupId>
     <artifactId>kuduandimpala</artifactId>
     <version>1.0-SNAPSHOT</version>
-
     <repositories>
         <repository>
             <id>cloudera</id>
-            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+            <!--            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>-->
+            <url>http://repo.odysseusinc.com/artifactory/community-libs-release-local/</url>
         </repository>
     </repositories>
-
     <dependencies>
         <dependency>
             <groupId>org.apache.kudu</groupId>
             <artifactId>kudu-client-tools</artifactId>
             <version>1.6.0-cdh5.14.0</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.kudu</groupId>
             <artifactId>kudu-client</artifactId>
             <version>1.6.0-cdh5.14.0</version>
         </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.apache.kudu/kudu-spark2 -->
         <dependency>
             <groupId>org.apache.kudu</groupId>
             <artifactId>kudu-spark2_2.11</artifactId>
             <version>1.6.0-cdh5.14.0</version>
         </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-sql -->
         <dependency>
             <groupId>org.apache.spark</groupId>
@@ -64,7 +60,6 @@
             <version>0.9.3</version>
             <type>pom</type>
         </dependency>
-
         <dependency>
             <groupId>org.apache.hive</groupId>
             <artifactId>hive-jdbc</artifactId>
@@ -78,14 +73,14 @@
                     <artifactId>hive-service</artifactId>
                 </exclusion>
             </exclusions>
-            <version>1.1.0</version>
+            <version>1.2.1</version>
         </dependency>
 
         <!--导入hive-->
         <dependency>
             <groupId>org.apache.hive</groupId>
             <artifactId>hive-service</artifactId>
-            <version>1.1.0</version>
+            <version>1.2.1</version>
         </dependency>
 
     </dependencies>
